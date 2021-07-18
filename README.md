@@ -1,2 +1,3 @@
 # everskies-name-checker
-dogshit fuck me please im a sluit 
+
+its so bad but it works 
