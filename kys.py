@@ -1,19 +1,36 @@
 import requests
 import json
-import time
+import threading
 
-f = open("fuck.json") 
-d = json.load(f)
-lol = open("found.txt","a")
+names = json.load( open("fuck.json", "r") )
+url = "https://api.everskies.com/user/check-alias"
 
-for i in d:
-    url = f"https://api.everskies.com/user/check-alias"
-    param = {"alias":i}
-    time.sleep(0.5)
+goodNames = []
+
+globalLock = threading.Lock()
+
+def checkName(param):
     r = requests.post(url,json=param)
     print(str(r.text + " : " + i))
+    globalLock.acquire_lock()
     if r.text == "true":
-      lol.write(i + "\n")
-      lol.flush()
-lol.close()
-f.close()
+      goodNames.append(i)
+    globalLock.release_lock()
+
+threadsAlive=[]
+
+for i in names:
+    param = {"alias":i}
+    thread=threading.Thread(target=checkName, args=(param,) )
+    thread.start()
+    threadsAlive.append(thread.is_alive)    
+
+while True in [ Alive() for Alive in threadsAlive ]: pass
+# wait for all threads to die
+
+with open("found.txt","a") as out:
+    for name in goodNames:
+        out.write(name)
+        out.write('\n')
+
+print('Done')
