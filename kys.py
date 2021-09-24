@@ -9,7 +9,8 @@ goodNames = []
 
 globalLock = threading.Lock()
 
-def checkName(param):
+def checkName(i):
+    param = {"alias":i}
     r = requests.post(url,json=param)
     print(str(r.text + " : " + i))
     globalLock.acquire_lock()
@@ -20,8 +21,7 @@ def checkName(param):
 threadsAlive=[]
 
 for i in names:
-    param = {"alias":i}
-    thread=threading.Thread(target=checkName, args=(param,) )
+    thread=threading.Thread(target=checkName, args=(i,) )
     thread.start()
     threadsAlive.append(thread.is_alive)    
 
